@@ -1,0 +1,268 @@
+{
+  "apple_scab": {
+    "English": "assets/audio/English/apple_scab.mp3",
+    "Hausa": "assets/audio/Hausa/apple_scab.mp3",
+    "Yoruba": "assets/audio/Yoruba/apple_scab.mp3",
+    "Igbo": "assets/audio/Igbo/apple_scab.mp3",
+    "Pidgin": "assets/audio/Pidgin/apple_scab.mp3"
+  },
+  "apple_black_rot": {
+    "English": "assets/audio/English/apple_black_rot.mp3",
+    "Hausa": "assets/audio/Hausa/apple_black_rot.mp3",
+    "Yoruba": "assets/audio/Yoruba/apple_black_rot.mp3",
+    "Igbo": "assets/audio/Igbo/apple_black_rot.mp3",
+    "Pidgin": "assets/audio/Pidgin/apple_black_rot.mp3"
+  },
+  "apple_cedar_rust": {
+    "English": "assets/audio/English/apple_cedar_rust.mp3",
+    "Hausa": "assets/audio/Hausa/apple_cedar_rust.mp3",
+    "Yoruba": "assets/audio/Yoruba/apple_cedar_rust.mp3",
+    "Igbo": "assets/audio/Igbo/apple_cedar_rust.mp3",
+    "Pidgin": "assets/audio/Pidgin/apple_cedar_rust.mp3"
+  },
+  "apple_healthy": {
+    "English": "assets/audio/English/apple_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/apple_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/apple_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/apple_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/apple_healthy.mp3"
+  },
+  "blueberry_healthy": {
+    "English": "assets/audio/English/blueberry_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/blueberry_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/blueberry_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/blueberry_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/blueberry_healthy.mp3"
+  },
+  "cherry_powdery_mildew": {
+    "English": "assets/audio/English/cherry_powdery_mildew.mp3",
+    "Hausa": "assets/audio/Hausa/cherry_powdery_mildew.mp3",
+    "Yoruba": "assets/audio/Yoruba/cherry_powdery_mildew.mp3",
+    "Igbo": "assets/audio/Igbo/cherry_powdery_mildew.mp3",
+    "Pidgin": "assets/audio/Pidgin/cherry_powdery_mildew.mp3"
+  },
+  "cherry_healthy": {
+    "English": "assets/audio/English/cherry_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/cherry_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/cherry_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/cherry_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/cherry_healthy.mp3"
+  },
+  "corn_gray_leaf_spot": {
+    "English": "assets/audio/English/corn_gray_leaf_spot.mp3",
+    "Hausa": "assets/audio/Hausa/corn_gray_leaf_spot.mp3",
+    "Yoruba": "assets/audio/Yoruba/corn_gray_leaf_spot.mp3",
+    "Igbo": "assets/audio/Igbo/corn_gray_leaf_spot.mp3",
+    "Pidgin": "assets/audio/Pidgin/corn_gray_leaf_spot.mp3"
+  },
+  "corn_common_rust": {
+    "English": "assets/audio/English/corn_common_rust.mp3",
+    "Hausa": "assets/audio/Hausa/corn_common_rust.mp3",
+    "Yoruba": "assets/audio/Yoruba/corn_common_rust.mp3",
+    "Igbo": "assets/audio/Igbo/corn_common_rust.mp3",
+    "Pidgin": "assets/audio/Pidgin/corn_common_rust.mp3"
+  },
+  "corn_northern_leaf_blight": {
+    "English": "assets/audio/English/corn_northern_leaf_blight.mp3",
+    "Hausa": "assets/audio/Hausa/corn_northern_leaf_blight.mp3",
+    "Yoruba": "assets/audio/Yoruba/corn_northern_leaf_blight.mp3",
+    "Igbo": "assets/audio/Igbo/corn_northern_leaf_blight.mp3",
+    "Pidgin": "assets/audio/Pidgin/corn_northern_leaf_blight.mp3"
+  },
+  "corn_healthy": {
+    "English": "assets/audio/English/corn_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/corn_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/corn_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/corn_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/corn_healthy.mp3"
+  },
+  "grape_black_rot": {
+    "English": "assets/audio/English/grape_black_rot.mp3",
+    "Hausa": "assets/audio/Hausa/grape_black_rot.mp3",
+    "Yoruba": "assets/audio/Yoruba/grape_black_rot.mp3",
+    "Igbo": "assets/audio/Igbo/grape_black_rot.mp3",
+    "Pidgin": "assets/audio/Pidgin/grape_black_rot.mp3"
+  },
+  "grape_esca": {
+    "English": "assets/audio/English/grape_esca.mp3",
+    "Hausa": "assets/audio/Hausa/grape_esca.mp3",
+    "Yoruba": "assets/audio/Yoruba/grape_esca.mp3",
+    "Igbo": "assets/audio/Igbo/grape_esca.mp3",
+    "Pidgin": "assets/audio/Pidgin/grape_esca.mp3"
+  },
+  "grape_leaf_blight": {
+    "English": "assets/audio/English/grape_leaf_blight.mp3",
+    "Hausa": "assets/audio/Hausa/grape_leaf_blight.mp3",
+    "Yoruba": "assets/audio/Yoruba/grape_leaf_blight.mp3",
+    "Igbo": "assets/audio/Igbo/grape_leaf_blight.mp3",
+    "Pidgin": "assets/audio/Pidgin/grape_leaf_blight.mp3"
+  },
+  "grape_healthy": {
+    "English": "assets/audio/English/grape_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/grape_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/grape_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/grape_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/grape_healthy.mp3"
+  },
+  "orange_citrus_greening": {
+    "English": "assets/audio/English/orange_citrus_greening.mp3",
+    "Hausa": "assets/audio/Hausa/orange_citrus_greening.mp3",
+    "Yoruba": "assets/audio/Yoruba/orange_citrus_greening.mp3",
+    "Igbo": "assets/audio/Igbo/orange_citrus_greening.mp3",
+    "Pidgin": "assets/audio/Pidgin/orange_citrus_greening.mp3"
+  },
+  "peach_bacterial_spot": {
+    "English": "assets/audio/English/peach_bacterial_spot.mp3",
+    "Hausa": "assets/audio/Hausa/peach_bacterial_spot.mp3",
+    "Yoruba": "assets/audio/Yoruba/peach_bacterial_spot.mp3",
+    "Igbo": "assets/audio/Igbo/peach_bacterial_spot.mp3",
+    "Pidgin": "assets/audio/Pidgin/peach_bacterial_spot.mp3"
+  },
+  "peach_healthy": {
+    "English": "assets/audio/English/peach_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/peach_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/peach_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/peach_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/peach_healthy.mp3"
+  },
+  "pepper_bacterial_spot": {
+    "English": "assets/audio/English/pepper_bacterial_spot.mp3",
+    "Hausa": "assets/audio/Hausa/pepper_bacterial_spot.mp3",
+    "Yoruba": "assets/audio/Yoruba/pepper_bacterial_spot.mp3",
+    "Igbo": "assets/audio/Igbo/pepper_bacterial_spot.mp3",
+    "Pidgin": "assets/audio/Pidgin/pepper_bacterial_spot.mp3"
+  },
+  "pepper_healthy": {
+    "English": "assets/audio/English/pepper_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/pepper_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/pepper_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/pepper_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/pepper_healthy.mp3"
+  },
+  "potato_early_blight": {
+    "English": "assets/audio/English/potato_early_blight.mp3",
+    "Hausa": "assets/audio/Hausa/potato_early_blight.mp3",
+    "Yoruba": "assets/audio/Yoruba/potato_early_blight.mp3",
+    "Igbo": "assets/audio/Igbo/potato_early_blight.mp3",
+    "Pidgin": "assets/audio/Pidgin/potato_early_blight.mp3"
+  },
+  "potato_late_blight": {
+    "English": "assets/audio/English/potato_late_blight.mp3",
+    "Hausa": "assets/audio/Hausa/potato_late_blight.mp3",
+    "Yoruba": "assets/audio/Yoruba/potato_late_blight.mp3",
+    "Igbo": "assets/audio/Igbo/potato_late_blight.mp3",
+    "Pidgin": "assets/audio/Pidgin/potato_late_blight.mp3"
+  },
+  "potato_healthy": {
+    "English": "assets/audio/English/potato_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/potato_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/potato_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/potato_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/potato_healthy.mp3"
+  },
+  "raspberry_healthy": {
+    "English": "assets/audio/English/raspberry_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/raspberry_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/raspberry_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/raspberry_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/raspberry_healthy.mp3"
+  },
+  "soybean_healthy": {
+    "English": "assets/audio/English/soybean_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/soybean_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/soybean_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/soybean_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/soybean_healthy.mp3"
+  },
+  "squash_powdery_mildew": {
+    "English": "assets/audio/English/squash_powdery_mildew.mp3",
+    "Hausa": "assets/audio/Hausa/squash_powdery_mildew.mp3",
+    "Yoruba": "assets/audio/Yoruba/squash_powdery_mildew.mp3",
+    "Igbo": "assets/audio/Igbo/squash_powdery_mildew.mp3",
+    "Pidgin": "assets/audio/Pidgin/squash_powdery_mildew.mp3"
+  },
+  "strawberry_leaf_scorch": {
+    "English": "assets/audio/English/strawberry_leaf_scorch.mp3",
+    "Hausa": "assets/audio/Hausa/strawberry_leaf_scorch.mp3",
+    "Yoruba": "assets/audio/Yoruba/strawberry_leaf_scorch.mp3",
+    "Igbo": "assets/audio/Igbo/strawberry_leaf_scorch.mp3",
+    "Pidgin": "assets/audio/Pidgin/strawberry_leaf_scorch.mp3"
+  },
+  "strawberry_healthy": {
+    "English": "assets/audio/English/strawberry_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/strawberry_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/strawberry_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/strawberry_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/strawberry_healthy.mp3"
+  },
+  "tomato_bacterial_spot": {
+    "English": "assets/audio/English/tomato_bacterial_spot.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_bacterial_spot.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_bacterial_spot.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_bacterial_spot.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_bacterial_spot.mp3"
+  },
+  "tomato_early_blight": {
+    "English": "assets/audio/English/tomato_early_blight.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_early_blight.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_early_blight.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_early_blight.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_early_blight.mp3"
+  },
+  "tomato_late_blight": {
+    "English": "assets/audio/English/tomato_late_blight.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_late_blight.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_late_blight.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_late_blight.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_late_blight.mp3"
+  },
+  "tomato_leaf_mold": {
+    "English": "assets/audio/English/tomato_leaf_mold.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_leaf_mold.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_leaf_mold.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_leaf_mold.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_leaf_mold.mp3"
+  },
+  "tomato_septoria_leaf_spot": {
+    "English": "assets/audio/English/tomato_septoria_leaf_spot.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_septoria_leaf_spot.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_septoria_leaf_spot.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_septoria_leaf_spot.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_septoria_leaf_spot.mp3"
+  },
+  "tomato_spider_mites": {
+    "English": "assets/audio/English/tomato_spider_mites.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_spider_mites.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_spider_mites.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_spider_mites.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_spider_mites.mp3"
+  },
+  "tomato_target_spot": {
+    "English": "assets/audio/English/tomato_target_spot.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_target_spot.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_target_spot.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_target_spot.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_target_spot.mp3"
+  },
+  "tomato_yellow_leaf_curl": {
+    "English": "assets/audio/English/tomato_yellow_leaf_curl.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_yellow_leaf_curl.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_yellow_leaf_curl.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_yellow_leaf_curl.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_yellow_leaf_curl.mp3"
+  },
+  "tomato_mosaic_virus": {
+    "English": "assets/audio/English/tomato_mosaic_virus.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_mosaic_virus.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_mosaic_virus.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_mosaic_virus.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_mosaic_virus.mp3"
+  },
+  "tomato_healthy": {
+    "English": "assets/audio/English/tomato_healthy.mp3",
+    "Hausa": "assets/audio/Hausa/tomato_healthy.mp3",
+    "Yoruba": "assets/audio/Yoruba/tomato_healthy.mp3",
+    "Igbo": "assets/audio/Igbo/tomato_healthy.mp3",
+    "Pidgin": "assets/audio/Pidgin/tomato_healthy.mp3"
+  }
+}

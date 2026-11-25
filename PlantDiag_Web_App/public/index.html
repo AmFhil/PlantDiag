@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlantDiag™ Web — Dual AI Crop Diagnosis (v1.7 & v2.0)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 3C8 3 4 8 4 14C4 20 9 24 14 25C13 20 15 15 20 12C20 7 17 3 14 3Z" fill="url(#grad-leaf)"/>
+            <path d="M14 14C17 10 21 8 24 8C24 13 21 18 16 20C15 17 14 15 14 14Z" fill="url(#grad-accent)"/>
+            <circle cx="14" cy="14" r="2.5" fill="#FFE082"/>
+            <defs>
+              <linearGradient id="grad-leaf" x1="4" y1="3" x2="20" y2="25" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#00A859"/>
+                <stop offset="1" stop-color="#006837"/>
+              </linearGradient>
+              <linearGradient id="grad-accent" x1="14" y1="8" x2="24" y2="20" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FFD54F"/>
+                <stop offset="1" stop-color="#B78103"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">PlantDiag<span class="brand-badge">WEB</span></span>
+          <span class="brand-sub">AI Crop Pathology Suite</span>
+        </div>
+      </div>
+      <div class="header-credit">
+        Built by <strong>Fhinovax<sup>™</sup></strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Model Switcher Card -->
+    <section class="model-switcher-section">
+      <div class="section-badge">SELECT ACTIVE AI ENGINE</div>
+      <div class="model-buttons">
+        <button id="btnModelV2" class="model-btn active" data-model="v2.0">
+          <div class="btn-icon">🌾</div>
+          <div class="btn-content">
+            <span class="btn-title">PlantDiag v2.0 (African Staples)</span>
+            <span class="btn-desc">Fine-Tuned for Cassava (5 conditions) & Rice (4 conditions)</span>
+          </div>
+          <span class="btn-pill">NEW</span>
+        </button>
+        <button id="btnModelV1" class="model-btn" data-model="v1.7">
+          <div class="btn-icon">🌱</div>
+          <div class="btn-content">
+            <span class="btn-title">PlantDiag v1.7 (38 Commercial Crops)</span>
+            <span class="btn-desc">Corn, Tomato, Pepper, Potato, Citrus, Apple, Grape, etc.</span>
+          </div>
+          <span class="btn-pill baseline">BASELINE</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Upload & Interactive Area -->
+    <section class="diagnostic-grid">
+      
+      <!-- Left Column: Input -->
+      <div class="card input-card">
+        <div class="card-header">
+          <h2 class="card-title">Upload or Capture Leaf</h2>
+          <span class="card-hint" id="activeModelHint">Targeting: Cassava & Rice (v2.0)</span>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="fileInput" accept="image/*" hidden>
+          <div class="drop-content" id="dropPrompt">
+            <div class="upload-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <p class="drop-main">Drag and drop your leaf photo here</p>
+            <p class="drop-sub">or <button type="button" class="link-btn" id="browseBtn">browse files</button> from your device</p>
+          </div>
+          <img id="previewImg" class="preview-img" alt="Leaf preview" hidden>
+        </div>
+
+        <!-- Quick Sample Chips -->
+        <div class="samples-wrapper">
+          <span class="samples-label">⚡ Instant Test Samples:</span>
+          <div class="sample-chips">
+            <button type="button" class="sample-chip" data-img="samples/cassava_mosaic_sample.jpg" data-preferred="v2.0">
+              🍂 Cassava Mosaic
+            </button>
+            <button type="button" class="sample-chip" data-img="samples/cassava_healthy_sample.jpg" data-preferred="v2.0">
+              🌿 Cassava Healthy
+            </button>
+            <button type="button" class="sample-chip" data-img="samples/rice_blast_sample.jpg" data-preferred="v2.0">
+              🌾 Rice Blast
+            </button>
+            <button type="button" class="sample-chip" data-img="samples/corn_rust_sample.jpg" data-preferred="v1.7">
+              🌽 Corn Rust
+            </button>
+            <button type="button" class="sample-chip" data-img="samples/tomato_early_blight_sample.jpg" data-preferred="v1.7">
+              🍅 Tomato Blight
+            </button>
+            <button type="button" class="sample-chip" data-img="samples/pepper_bacterial_spot_sample.jpg" data-preferred="v1.7">
+              🫑 Pepper Spot
+            </button>
+          </div>
+        </div>
+
+        <button id="analyzeBtn" class="action-btn" disabled>
+          <span class="btn-spinner" id="analyzeSpinner" hidden></span>
+          <span id="analyzeBtnText">Select a Leaf to Diagnose</span>
+        </button>
+      </div>
+
+      <!-- Right Column: Diagnosis Result -->
+      <div class="card result-card" id="resultCard">
+        <div class="card-header">
+          <h2 class="card-title">Diagnostic Assessment</h2>
+          <div class="lang-selector">
+            <label for="langSelect">Language:</label>
+            <select id="langSelect">
+              <option value="en" selected>English</option>
+              <option value="ha">Hausa (Harshen Hausa)</option>
+              <option value="yo">Yoruba (Èdè Yorùbá)</option>
+              <option value="ig">Igbo (Asụsụ Igbo)</option>
+              <option value="pcm">Nigerian Pidgin</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Result Placeholder -->
+        <div class="result-placeholder" id="resultPlaceholder">
+          <div class="placeholder-icon">🔬</div>
+          <p class="placeholder-text">Upload a leaf photo or pick a sample above to see real-time AI disease detection and multi-dialect voice advisory.</p>
+        </div>
+
+        <!-- Real Diagnosis Output -->
+        <div class="result-content" id="resultContent" hidden>
+          
+          <div class="diagnosis-top-box">
+            <div class="title-cluster">
+              <span class="crop-tag" id="resCropName">Cassava</span>
+              <h3 class="disease-name" id="resDiseaseName">Cassava Mosaic Disease (CMD)</h3>
+            </div>
+            <div class="severity-badge" id="resSeverity">Severe Condition</div>
+          </div>
+
+          <!-- Confidence Meter -->
+          <div class="confidence-box">
+            <div class="confidence-header">
+              <span class="conf-label">Neural Confidence Score</span>
+              <span class="conf-value" id="resConfidenceVal">96.2%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="resConfidenceBar" style="width: 96.2%;"></div>
+            </div>
+          </div>
+
+          <!-- Symptoms Box -->
+          <div class="info-block" id="symptomsBlock">
+            <div class="info-label">⚠️ Observed Symptoms</div>
+            <p class="info-text" id="resSymptoms">Distorted, stunted, twisted leaves with distinct yellow and green mosaic patches.</p>
+          </div>
+
+          <!-- Treatment Advisory Box -->
+          <div class="info-block treatment-block">
+            <div class="info-label">💊 Recommended Treatment & Action Plan</div>
+            <p class="info-text treatment-text" id="resTreatment">Plant IITA-improved mosaic-resistant varieties and eliminate whitefly breeding grounds.</p>
+          </div>
+
+          <!-- Action Buttons: Speak Audio -->
+          <div class="result-actions">
+            <button type="button" class="speak-btn" id="speakBtn">
+              <span class="speak-icon">🔊</span>
+              <span id="speakBtnText">Hear Advice Aloud</span>
+            </button>
+            <span class="engine-tag" id="resEngineTag">Engine: MobileNetV3 (v2.0)</span>
+          </div>
+
+          <!-- Top-3 Alternatives -->
+          <div class="top3-box">
+            <span class="top3-title">Statistical Class Distribution (Top-3):</span>
+            <div class="top3-list" id="resTop3List">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <p class="footer-credit">PlantDiag™ Mobile & Web Diagnostic Suite · Built by <strong>Fhinovax<sup>™</sup></strong></p>
+      <p class="footer-note">Designed for Offline Agricultural Resilience Across Sub-Saharan Africa</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

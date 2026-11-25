@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#008751">
+  <meta name="description" content="PlantDiag — offline crop disease diagnosis for farmers. Works without internet.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23043c2a'/%3E%3Ccircle cx='50' cy='50' r='38' stroke='%2334D399' stroke-width='3' stroke-opacity='0.4' fill='none'/%3E%3Cpath d='M22 30 H28 M22 30 V36 M78 30 H72 M78 30 V36 M22 70 H28 M22 70 V64 M78 70 H72 M78 70 V64' stroke='%23FBBF24' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M50 20 C32 30 24 50 50 80 Z' fill='%2310B981'/%3E%3Cpath d='M50 20 C68 30 76 50 50 80 Z' fill='%2334D399'/%3E%3Cline x1='50' y1='20' x2='50' y2='80' stroke='%23FFFFFF' stroke-width='3.5' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='54' r='5' fill='%23FBBF24'/%3E%3C/svg%3E">
+  <title>PlantDiag — Start</title>
+  <link rel="stylesheet" href="css/style.css?v=2.1">
+</head>
+<body>
+  <!-- App header (same as Android / app UI) -->
+  <header class="app-header">
+    <div class="header-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:7px;overflow:hidden;">
+          <rect width="100" height="100" rx="22" fill="#043c2a"/>
+          <circle cx="50" cy="50" r="38" stroke="#34D399" stroke-width="2.5" stroke-opacity="0.4"/>
+          <path d="M22 30 H28 M22 30 V36 M78 30 H72 M78 30 V36 M22 70 H28 M22 70 V64 M78 70 H72 M78 70 V64" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M50 20 C32 30 24 50 50 80 Z" fill="#10B981"/>
+          <path d="M50 20 C68 30 76 50 50 80 Z" fill="#34D399"/>
+          <line x1="50" y1="20" x2="50" y2="80" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+          <path d="M50 36 L38 31 M50 36 L62 31 M50 52 L36 47 M50 52 L64 47 M50 66 L40 62 M50 66 L60 62" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-opacity="0.85"/>
+          <circle cx="50" cy="54" r="5" fill="#FBBF24"/>
+          <circle cx="50" cy="54" r="2.5" fill="#FFFFFF"/>
+        </svg>
+      </span>
+      <span class="brand-name">PlantDiag</span>
+    </div>
+    <span class="offline-badge">● Offline</span>
+  </header>
+
+  <!-- Start menu -->
+  <main class="page-container">
+    <section class="page active" aria-label="Start menu">
+      <div class="hero-card">
+        <h1>Welcome!</h1>
+        <p class="hero-sub">Diagnose crop diseases offline in your own language.</p>
+      </div>
+
+      <div class="home-menu">
+        <button id="btn-photo" class="big-btn">
+          <img src="assets/icons/camera.png" alt="Camera" class="btn-icon"/>
+          Take Picture
+        </button>
+        <button id="btn-live" class="big-btn">
+          <img src="assets/icons/play.png" alt="Live" class="btn-icon"/>
+          Live Demo
+        </button>
+      </div>
+
+      <div class="app-credit">Built by Fhinovax<sup>TM</sup></div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('btn-photo').addEventListener('click', function () {
+      window.location.href = 'app.html?camera=1';
+    });
+    document.getElementById('btn-live').addEventListener('click', function () {
+      window.open('live.html', '_blank');
+    });
+  </script>
+</body>
+</html>

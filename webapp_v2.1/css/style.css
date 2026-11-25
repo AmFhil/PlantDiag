@@ -1,0 +1,637 @@
+/* ==========================================================================
+   AgriNovva — Brand Stylesheet
+   Tokens per PRD v1.3 (green/gold/white)
+   ========================================================================== */
+
+/* --- Brand tokens (PRD §BRAND & DESIGN) --- */
+:root {
+  --primary-green: #008751;      /* Primary actions, headers, active tab */
+  --deep-green: #004D2E;         /* Text on light bg, dark surfaces */
+  --gold: #FFC72C;               /* Accents, badges, secondary CTA */
+  --soft-gold: #F5D48A;          /* Hover/tint states, dividers */
+  --white: #FFFFFF;              /* Base background, cards */
+  --off-white: #F7F9F7;          /* Alternating backgrounds, disabled */
+  --error-red: #C0392B;          /* Errors only */
+
+  --text-primary: #17251D;       /* Near-deep-green body text */
+  --text-muted: #5B6B60;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 2px 8px rgba(0, 77, 46, 0.08);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* --- Reset / base --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;              /* field-friendly readability */
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--off-white); /* Off-White base */
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* --- Header (Primary Green) --- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--primary-green);      /* Primary Green */
+  color: var(--white);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-mark { font-size: 1.3rem; }
+
+.brand-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.offline-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--soft-gold);               /* Soft Gold text on green = AA */
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.header-lang-select {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  border: none;
+  border-radius: 999px;
+  padding: 4px 24px 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23FFFFFF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  outline: none;
+}
+.header-lang-select option {
+  color: var(--text-primary);
+  background: var(--white);
+}
+
+/* --- Page container --- */
+.page-container {
+  flex: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;               /* bottom room for nav */
+}
+
+/* --- Pages (tab switching) --- */
+.page { display: none; }
+.page.active { display: block; }
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--deep-green);              /* Deep Green headings */
+  margin-bottom: 14px;
+}
+
+/* --- Cards --- */
+.card {
+  background: var(--white);              /* White cards on Off-White bg */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 18px 16px;
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--deep-green);
+  margin-bottom: 8px;
+}
+
+/* --- Hero (Home) --- */
+.hero-card {
+  background: linear-gradient(160deg, var(--primary-green) 0%, var(--deep-green) 100%);
+  color: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 28px 20px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.hero-card h1 { font-size: 1.6rem; margin-bottom: 6px; }
+.hero-sub { opacity: 0.92; margin-bottom: 20px; font-size: 0.95rem; }
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;                      /* 48dp touch target */
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.05s ease, filter 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--primary-green);      /* Green + white text = WCAG AA 4.6:1 */
+  color: var(--white);
+}
+.btn-primary:hover { filter: brightness(1.05); }
+
+.btn-secondary {
+  background: var(--off-white);
+  color: var(--deep-green);
+  border: 1.5px solid var(--primary-green);
+}
+
+.btn-gold {
+  background: var(--gold);               /* Gold used sparingly — secondary CTA only */
+  color: var(--deep-green);              /* Deep Green text on Gold = high contrast */
+}
+.btn-gold:hover { filter: brightness(1.03); }
+
+.btn-large { min-height: 56px; font-size: 1.08rem; }
+
+.icon { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+.icon-large { width: 64px; height: 64px; }
+.muted { opacity: 0.35; }
+
+/* --- Camera zone (Diagnose) --- */
+.camera-zone {
+  background: var(--white);
+  border: 2px dashed var(--primary-green);
+  border-radius: var(--radius-lg);
+  padding: 36px 20px;
+  text-align: center;
+  margin-bottom: 14px;
+  color: var(--primary-green);
+}
+
+.camera-hint {
+  color: var(--text-muted);
+  margin: 12px 0 18px;
+  font-size: 0.95rem;
+}
+
+.analyze-status {
+  color: var(--gold);
+  font-weight: 600;
+  margin: 0 0 14px;
+}
+
+.preview-img {
+  display: block;
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  border: 2px solid var(--primary-green);
+}
+
+.camera-zone .btn { margin-bottom: 10px; }
+
+/* --- Result card --- */
+.result-disease {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--deep-green);
+  margin-bottom: 4px;
+}
+
+.result-confidence {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.result-treatment {
+  font-size: 0.95rem;
+  background: var(--off-white);
+  border-left: 4px solid var(--gold);    /* Gold accent line */
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+/* --- Form fields --- */
+.field-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--deep-green);
+  margin: 14px 0 6px;
+}
+
+.input, .select {
+  width: 100%;
+  min-height: 48px;                      /* 48dp touch target */
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 1.5px solid #D5DDD7;
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--text-primary);
+  appearance: none;
+}
+
+.input:focus, .select:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px var(--soft-gold);
+}
+
+.select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23004D2E' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.form-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; text-align: center; }
+
+/* --- Toggle switch (Settings) --- */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--deep-green);
+}
+
+.toggle-row input { display: none; }
+
+.toggle-slider {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  background: #CBD5CF;
+  border-radius: 999px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.toggle-slider::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: var(--white);
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.toggle-row input:checked + .toggle-slider { background: var(--primary-green); }
+.toggle-row input:checked + .toggle-slider::after { transform: translateX(22px); }
+
+/* --- Empty states --- */
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 12px 0;
+}
+
+.empty-state p { font-weight: 600; color: var(--deep-green); }
+.empty-sub { font-size: 0.85rem; color: var(--text-muted) !important; font-weight: 400 !important; }
+
+/* --- About --- */
+.about-text { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 8px; }
+.about-text.version { font-size: 0.8rem; }
+
+/* --- Bottom navigation --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: var(--white);
+  border-top: 1px solid #E2E8E3;
+  padding-bottom: var(--safe-bottom);
+  z-index: 20;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 0;
+  min-height: 56px;                      /* 48dp+ touch target */
+  border: none;
+  background: none;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item .icon { width: 24px; height: 24px; }
+
+.nav-item.active {
+  color: var(--primary-green);           /* Active tab = Primary Green */
+}
+
+.nav-item.active .icon { fill: var(--primary-green); }
+
+/* --- Accessibility: reduce motion --- */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* ==========================================================================
+   Phase 2 additions — history cards, confidence chips, severity indicators
+   ========================================================================== */
+
+/* --- Confidence / severity chips --- */
+.chip {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.chip-healthy  { background: #E6F4EE; color: #006B3F; }
+.chip-high     { background: #FDECEA; color: #B71C1C; }  /* high confidence in disease */
+.chip-medium   { background: #FFF8E1; color: #7B5800; }
+.chip-low      { background: #F5F5F5; color: #5B6B60; }
+
+/* --- Result card severity border (set via data-severity by app.js) --- */
+#resultCard[data-severity="healthy"]  { border-left: 4px solid #008751; }
+#resultCard[data-severity="high"]     { border-left: 4px solid var(--error-red); }
+#resultCard[data-severity="medium"]   { border-left: 4px solid var(--gold); }
+#resultCard[data-severity="low"]      { border-left: 4px solid #9E9E9E; }
+
+/* --- History cards (rendered by renderDiagnosisList) --- */
+.history-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  transition: box-shadow 0.15s ease;
+}
+
+.history-card:last-child { margin-bottom: 0; }
+
+.history-card:hover {
+  box-shadow: 0 4px 14px rgba(0, 77, 46, 0.13);
+}
+
+.history-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.history-crop {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--deep-green);
+}
+
+.history-disease {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.history-treatment {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  /* Clamp to 2 lines so cards stay compact */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.history-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 4px;
+}
+
+/* --- Form helpers (Phase 2) --- */
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.required {
+  color: var(--error-red);
+  font-weight: 700;
+}
+
+/* Save confirmation flash */
+.save-confirmation {
+  text-align: center;
+  color: var(--primary-green);
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-top: 10px;
+  transition: opacity 1.5s ease;
+}
+
+/* --- PlantDiag App Credit --- */
+.app-credit {
+  text-align: center;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin: 18px 0 10px;
+  letter-spacing: 0.4px;
+  opacity: 0.85;
+}
+
+.app-credit sup {
+  font-size: 0.65em;
+  font-weight: 700;
+  color: var(--primary-green);
+  vertical-align: super;
+  margin-left: 1px;
+}
+
+/* ==========================================================================
+   v2.1 — Start menu (home.html) + crop-override modal
+   ========================================================================== */
+
+.home-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.big-btn {
+  width: 90%;
+  max-width: 400px;
+  padding: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: var(--primary-green);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.big-btn:hover {
+  background: #006b40;
+}
+
+.big-btn:active {
+  transform: scale(0.98);
+}
+
+.btn-icon {
+  width: 26px;
+  height: 26px;
+}
+
+/* --- Crop-override modal --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.modal.hidden {
+  display: none !important;
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-content h2 {
+  font-size: 1.15rem;
+  color: var(--deep-green);
+  margin: 0;
+}
+
+.modal-content p {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.modal-content p span {
+  font-weight: 700;
+  color: var(--primary-green);
+}
+
+.modal-content label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.modal-content select {
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid rgba(0, 77, 46, 0.25);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--white);
+  color: var(--text-primary);
+}
+
+#crop-save {
+  min-height: 46px;
+  background: var(--primary-green);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#crop-save:hover {
+  background: #006b40;
+}
+
+.modal-cancel {
+  min-height: 42px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.modal-cancel:hover {
+  background: var(--off-white);
+}

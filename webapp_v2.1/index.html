@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#008751">
+  <meta name="description" content="PlantDiag — offline crop disease diagnosis for farmers. Works without internet.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23043c2a'/%3E%3Ccircle cx='50' cy='50' r='38' stroke='%2334D399' stroke-width='3' stroke-opacity='0.4' fill='none'/%3E%3Cpath d='M22 30 H28 M22 30 V36 M78 30 H72 M78 30 V36 M22 70 H28 M22 70 V64 M78 70 H72 M78 70 V64' stroke='%23FBBF24' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M50 20 C32 30 24 50 50 80 Z' fill='%2310B981'/%3E%3Cpath d='M50 20 C68 30 76 50 50 80 Z' fill='%2334D399'/%3E%3Cline x1='50' y1='20' x2='50' y2='80' stroke='%23FFFFFF' stroke-width='3.5' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='54' r='5' fill='%23FBBF24'/%3E%3C/svg%3E">
+  <title>PlantDiag</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- App header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:7px;overflow:hidden;">
+          <rect width="100" height="100" rx="22" fill="#043c2a"/>
+          <circle cx="50" cy="50" r="38" stroke="#34D399" stroke-width="2.5" stroke-opacity="0.4"/>
+          <path d="M22 30 H28 M22 30 V36 M78 30 H72 M78 30 V36 M22 70 H28 M22 70 V64 M78 70 H72 M78 70 V64" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M50 20 C32 30 24 50 50 80 Z" fill="#10B981"/>
+          <path d="M50 20 C68 30 76 50 50 80 Z" fill="#34D399"/>
+          <line x1="50" y1="20" x2="50" y2="80" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+          <path d="M50 36 L38 31 M50 36 L62 31 M50 52 L36 47 M50 52 L64 47 M50 66 L40 62 M50 66 L60 62" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-opacity="0.85"/>
+          <circle cx="50" cy="54" r="5" fill="#FBBF24"/>
+          <circle cx="50" cy="54" r="2.5" fill="#FFFFFF"/>
+        </svg>
+      </span>
+      <span class="brand-name">PlantDiag</span>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <select id="globalLangSelect" class="header-lang-select" aria-label="App Language">
+        <option value="English" selected>EN</option>
+        <option value="Hausa">HA</option>
+        <option value="Yoruba">YO</option>
+        <option value="Igbo">IG</option>
+        <option value="Pidgin">PCM</option>
+        <option value="Tiv" disabled>Tiv — Coming Soon</option>
+        <option value="Idoma" disabled>Idoma — Coming Soon</option>
+      </select>
+      <span class="offline-badge" id="offlineBadge">● Offline</span>
+    </div>
+  </header>
+
+  <!-- Page container -->
+  <main class="page-container">
+
+    <!-- HOME -->
+    <section class="page active" data-page="home" aria-label="Home">
+      <div class="hero-card">
+        <h1 data-i18n="hero_title">Welcome!</h1>
+        <p class="hero-sub" data-i18n="hero_sub">Diagnose crop diseases offline in your own language.</p>
+        <button class="btn btn-primary btn-large" id="homeDiagnoseBtn">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M9 2 7.17 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3.17L15 2H9zm3 15.5A5.5 5.5 0 1 1 17.5 12 5.5 5.5 0 0 1 12 17.5z"/></svg>
+          <span data-i18n="btn_diagnose_home">Diagnose Crop</span>
+        </button>
+      </div>
+      <div class="card">
+        <h2 class="card-title" data-i18n="title_recent">Recent Diagnoses</h2>
+        <!-- Populated by app.js → loadRecentDiagnoses() -->
+        <div id="recentList">
+          <p class="empty-state" data-i18n="empty_recent">No diagnoses yet — capture a crop photo to get started.</p>
+        </div>
+      </div>
+      <div class="app-credit">Built by Fhinovax<sup>TM</sup></div>
+    </section>
+
+    <!-- DIAGNOSE -->
+    <section class="page" data-page="diagnose" aria-label="Diagnose">
+      <h1 class="page-title" data-i18n="title_diagnose">Diagnose</h1>
+
+      <div class="card" style="margin-bottom: 12px; padding: 12px 14px;">
+        <label class="field-label" for="diagFarmerSelect" style="margin: 0 0 4px;" data-i18n="lbl_select_farmer">Link to Farmer (Optional)</label>
+        <select id="diagFarmerSelect" class="select" style="min-height: 42px;">
+          <option value="" selected>-- No farmer linked --</option>
+        </select>
+      </div>
+
+      <div class="camera-zone" id="cameraZone">
+        <svg viewBox="0 0 24 24" class="icon icon-large" id="cameraIcon" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M9 2 7.17 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3.17L15 2H9zm3 15.5A5.5 5.5 0 1 1 17.5 12 5.5 5.5 0 0 1 12 17.5z"/></svg>
+        <img id="previewImg" class="preview-img" alt="Captured crop photo" hidden>
+        <p class="camera-hint" id="cameraHint" data-i18n="camera_hint">Point your camera at the damaged leaf or crop</p>
+        <p class="analyze-status" id="analyzeStatus" data-i18n="status_analysing" hidden>Analysing leaf…</p>
+        <button class="btn btn-primary btn-large" id="captureBtn" data-i18n="btn_take_photo">Take Photo</button>
+        <button class="btn btn-secondary" id="galleryBtn" data-i18n="btn_gallery">Select from Gallery</button>
+        <button class="btn btn-secondary" id="retakeBtn" data-i18n="btn_retake" hidden>Retake Photo</button>
+      </div>
+
+      <div class="card" id="resultCard" hidden>
+        <h2 class="card-title" data-i18n="title_result">Result</h2>
+        <p class="result-disease" id="resultDisease">—</p>
+        <p class="result-confidence" id="resultConfidence">Confidence: —</p>
+        <p class="result-treatment" id="resultTreatment">Treatment advice will appear here.</p>
+        <button class="btn btn-gold" id="speakBtn">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>
+          <span data-i18n="btn_speak">Speak Result</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="page" data-page="history" aria-label="History">
+      <h1 class="page-title" data-i18n="title_history">History</h1>
+      
+      <div class="card">
+        <input type="search" id="historySearch" class="input" placeholder="Search by crop or disease..." aria-label="Search History" data-i18n-placeholder="search_history">
+      </div>
+
+      <!-- Populated by app.js → loadHistory() whenever this tab is activated -->
+      <div id="historyList">
+        <div class="card">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" class="icon icon-large muted" aria-hidden="true"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 1 1 2.05 4.95l-1.42 1.42A9 9 0 1 0 13 3zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8H12z"/></svg>
+            <p data-i18n="empty_history">No diagnoses yet</p>
+            <p class="empty-sub" data-i18n="empty_history_sub">Your past diagnoses will appear here.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FARMERS -->
+    <section class="page" data-page="farmers" aria-label="Farmers">
+      <h1 class="page-title" data-i18n="title_register">Register Farmer</h1>
+      <form class="card form" id="farmerForm" novalidate>
+
+        <label class="field-label" for="farmerName"><span data-i18n="lbl_name">Full Name</span> <span class="required">*</span></label>
+        <input type="text" id="farmerName" class="input" placeholder="e.g. Amina Bello" autocomplete="name" required>
+
+        <label class="field-label" for="farmerNin" data-i18n="lbl_nin">NIN (National ID Number)</label>
+        <input type="text" id="farmerNin" class="input" placeholder="e.g. 12345678901" inputmode="numeric" maxlength="11">
+        <p class="field-hint" data-i18n="hint_nin">Optional — 11-digit National Identification Number</p>
+
+        <label class="field-label" for="farmerPhone" data-i18n="lbl_phone">Phone</label>
+        <input type="tel" id="farmerPhone" class="input" placeholder="e.g. 0803 123 4567" autocomplete="tel">
+
+        <label class="field-label" for="farmerVillage" data-i18n="lbl_village">Village / Town</label>
+        <input type="text" id="farmerVillage" class="input" placeholder="e.g. Zaria">
+
+        <label class="field-label" for="farmerState" data-i18n="lbl_state">State</label>
+        <select id="farmerState" class="select">
+          <option value="" disabled selected>Select a State</option>
+          <option value="Abia">Abia</option>
+          <option value="Adamawa">Adamawa</option>
+          <option value="Akwa Ibom">Akwa Ibom</option>
+          <option value="Anambra">Anambra</option>
+          <option value="Bauchi">Bauchi</option>
+          <option value="Bayelsa">Bayelsa</option>
+          <option value="Benue">Benue</option>
+          <option value="Borno">Borno</option>
+          <option value="Cross River">Cross River</option>
+          <option value="Delta">Delta</option>
+          <option value="Ebonyi">Ebonyi</option>
+          <option value="Edo">Edo</option>
+          <option value="Ekiti">Ekiti</option>
+          <option value="Enugu">Enugu</option>
+          <option value="FCT - Abuja">FCT - Abuja</option>
+          <option value="Gombe">Gombe</option>
+          <option value="Imo">Imo</option>
+          <option value="Jigawa">Jigawa</option>
+          <option value="Kaduna">Kaduna</option>
+          <option value="Kano">Kano</option>
+          <option value="Katsina">Katsina</option>
+          <option value="Kebbi">Kebbi</option>
+          <option value="Kogi">Kogi</option>
+          <option value="Kwara">Kwara</option>
+          <option value="Lagos">Lagos</option>
+          <option value="Nasarawa">Nasarawa</option>
+          <option value="Niger">Niger</option>
+          <option value="Ogun">Ogun</option>
+          <option value="Ondo">Ondo</option>
+          <option value="Osun">Osun</option>
+          <option value="Oyo">Oyo</option>
+          <option value="Plateau">Plateau</option>
+          <option value="Rivers">Rivers</option>
+          <option value="Sokoto">Sokoto</option>
+          <option value="Taraba">Taraba</option>
+          <option value="Yobe">Yobe</option>
+          <option value="Zamfara">Zamfara</option>
+        </select>
+
+        <label class="field-label" for="farmerLang" data-i18n="lbl_pref_lang">Preferred Language</label>
+        <select id="farmerLang" class="select">
+          <option value="English" selected>English</option>
+          <option value="Hausa">Hausa</option>
+          <option value="Yoruba">Yoruba</option>
+          <option value="Igbo">Igbo</option>
+          <option value="Pidgin">Pidgin</option>
+          <option value="Tiv" disabled>Tiv — Coming Soon</option>
+          <option value="Idoma" disabled>Idoma — Coming Soon</option>
+        </select>
+        <p class="field-hint" style="color:var(--text-muted);font-size:0.78rem;">Tiv &amp; Idoma audio support coming soon — stay tuned for Benue update</p>
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 8px;" data-i18n="btn_save_farmer">Save Farmer Details</button>
+        <p class="form-note">Stored offline on this device. <span class="required">*</span> = required</p>
+      </form>
+      <div class="card" id="farmerSyncCard" style="margin-top:12px;border-left:4px solid #008751;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3 class="card-title" style="margin:0;" data-i18n="title_sync_status">Sync Status</h3>
+          <span id="syncBadge" class="offline-badge" style="background:#FFF7ED;color:#9A3412;border:1px solid #FDBA74;">● Pending Sync</span>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:0.85rem;">
+          <span><strong id="pendingCount">0</strong> <span data-i18n="lbl_pending">pending</span></span>
+          <span><strong id="syncedCount">0</strong> <span data-i18n="lbl_synced">synced</span></span>
+          <span style="margin-left:auto;color:var(--text-muted);font-size:0.78rem;" id="lastSyncText">Last sync: never</span>
+        </div>
+        <button class="btn btn-secondary" id="fakeSyncBtn" style="margin-top:10px;width:100%;" data-i18n="btn_sync_now">Sync Now (offline-first queue)</button>
+        <p class="field-hint">Offline-first: saves locally, syncs when online.</p>
+      </div>
+    </section>
+
+    <!-- AGENT TOOLS -->
+    <section class="page" data-page="agent-tools" aria-label="Agent Tools">
+      <h1 class="page-title" data-i18n="title_agent_tools">Agent Tools</h1>
+      <div class="card" style="border-left:4px solid #008751;">
+        <h2 class="card-title" style="margin-top:0;" data-i18n="title_field_monitoring">Field Monitoring</h2>
+        <p class="about-text" data-i18n="desc_field_monitoring">Weekly visit checklist — geo-tagged, offline-first.</p>
+        <div style="display:grid;gap:8px;margin-top:10px;">
+          <label class="toggle-row" style="margin:0;"><span data-i18n="chk_crop_stand">🌱 Crop stand &amp; germination</span><input type="checkbox" class="agent-check"><span class="toggle-slider" aria-hidden="true"></span></label>
+          <label class="toggle-row" style="margin:0;"><span data-i18n="chk_moisture">💧 Irrigation / soil moisture</span><input type="checkbox" class="agent-check"><span class="toggle-slider" aria-hidden="true"></span></label>
+          <label class="toggle-row" style="margin:0;"><span data-i18n="chk_pest_scout">🐛 Pest &amp; disease scout</span><input type="checkbox" class="agent-check"><span class="toggle-slider" aria-hidden="true"></span></label>
+          <label class="toggle-row" style="margin:0;"><span data-i18n="chk_input_qr">🧴 Input usage verified (QR)</span><input type="checkbox" class="agent-check"><span class="toggle-slider" aria-hidden="true"></span></label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-secondary" id="agentCheckResetBtn" style="flex:1;" data-i18n="btn_reset">Reset</button>
+          <button class="btn btn-primary" id="agentCheckSaveBtn" style="flex:1;" data-i18n="btn_save_report">Save Field Report (offline)</button>
+        </div>
+        <p class="field-hint" id="agentCheckHint" style="min-height:1.2em;"></p>
+      </div>
+      <div class="card">
+        <h2 class="card-title" data-i18n="title_photo_evidence">Photo Evidence</h2>
+        <p class="about-text" data-i18n="desc_photo_evidence">Capture geo-tagged photos for audit trail (stored locally).</p>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="btn btn-primary" id="agentPhotoBtn" style="flex:1;" data-i18n="btn_capture_evidence">📷 Capture Evidence</button>
+          <button class="btn btn-secondary" id="agentGalleryBtn" style="flex:1;" data-i18n="btn_evidence_gallery">🖼️ Gallery</button>
+        </div>
+        <div id="agentPhotoPreview" style="margin-top:10px;display:none;">
+          <img id="agentPreviewImg" alt="Evidence preview" style="width:100%;border-radius:8px;max-height:220px;object-fit:cover;">
+          <p class="field-hint" id="agentPhotoMeta" style="margin-top:6px;">—</p>
+        </div>
+        <p class="field-hint">Tip: extension agents verify planting, input QR, and harvest grading — photos are proof for escrow.</p>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="page" data-page="settings" aria-label="Settings">
+      <h1 class="page-title" data-i18n="title_settings">Settings</h1>
+
+      <div class="card">
+        <label class="toggle-row" style="margin-top: 0;">
+          <span data-i18n="lbl_offline_mode">Offline Mode</span>
+          <input type="checkbox" id="offlineToggle" checked>
+          <span class="toggle-slider" aria-hidden="true"></span>
+        </label>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title" data-i18n="title_data_mgmt">Data Management</h2>
+        <button class="btn btn-secondary" id="syncDataBtn">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+          <span data-i18n="btn_sync_cloud">Sync Data to Cloud</span>
+        </button>
+        <button class="btn btn-secondary" id="clearDataBtn" style="border-color: var(--error-red); color: var(--error-red); margin-top: 12px;">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          <span data-i18n="btn_clear_data">Clear Local Data</span>
+        </button>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title" data-i18n="title_about">About PlantDiag</h2>
+        <p class="about-text" data-i18n="desc_about">PlantDiag helps farmers diagnose crop diseases offline and hear advice in their own language.</p>
+        <p class="about-text version">Version 1.6.0 · Works without internet</p>
+        <div class="app-credit" style="margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.06);">Built by Fhinovax<sup>TM</sup></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom navigation -->
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="nav-item active" data-target="home">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="nav-label" data-i18n="nav_home">Home</span>
+    </button>
+    <button class="nav-item" data-target="diagnose">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M9 2 7.17 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3.17L15 2H9zm3 15.5A5.5 5.5 0 1 1 17.5 12 5.5 5.5 0 0 1 12 17.5z"/></svg>
+      <span class="nav-label" data-i18n="nav_diagnose">Diagnose</span>
+    </button>
+    <button class="nav-item" data-target="history">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 1 1 2.05 4.95l-1.42 1.42A9 9 0 1 0 13 3zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8H12z"/></svg>
+      <span class="nav-label" data-i18n="nav_history">History</span>
+    </button>
+    <button class="nav-item" data-target="farmers">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span class="nav-label" data-i18n="nav_farmers">Farmers</span>
+    </button>
+    <button class="nav-item" data-page="agent-tools" data-target="agent-tools" aria-label="Agent Tools">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM9 18a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0-4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm4 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0-4a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
+      <span class="nav-label" data-i18n="nav_agent">Agent</span>
+    </button>
+    <button class="nav-item" data-page="settings" data-target="settings" aria-label="Settings">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M19.14 12.94a7.07 7.07 0 0 0 .06-1 7.07 7.07 0 0 0-.06-1l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.4 7.4 0 0 0-1.73-1L14.3 2.42A.5.5 0 0 0 13.85 2h-3.84a.5.5 0 0 0-.45.32l-.44 2.42a7.4 7.4 0 0 0-1.73 1l-2.39-.96a.5.5 0 0 0-.61.22L2.47 8.32a.5.5 0 0 0 .12.64l2.03 1.58a7.07 7.07 0 0 0 0 2L2.59 14.12a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96a7.4 7.4 0 0 0 1.73 1l.44 2.42a.5.5 0 0 0 .45.32h3.84a.5.5 0 0 0 .45-.32l.44-2.42a7.4 7.4 0 0 0 1.73-1l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64zM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z"/></svg>
+      <span class="nav-label" data-i18n="nav_settings">Settings</span>
+    </button>
+  </nav>
+
+  <script type="module" src="js/app.js?v=7"></script>
+</body>
+</html>
