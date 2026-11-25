@@ -1,0 +1,36 @@
+{
+  "name": "naija-harvest-app",
+  "version": "1.0.0",
+  "description": "AgriNovva - Offline crop diagnosis app for Nigerian farmers (Ionic + Capacitor)",
+  "private": true,
+  "main": "src/js/app.js",
+  "scripts": {
+    "sync": "cap sync",
+    "android": "cap open android",
+    "build": "cap copy",
+    "generate-audio": "node scripts/generate_audio.js"
+  },
+  "keywords": [
+    "agriculture",
+    "offline",
+    "capacitor",
+    "tflite",
+    "nigeria"
+  ],
+  "author": "AgriNovva Team",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@capacitor-community/sqlite": "^8.1.1",
+    "@capacitor-community/text-to-speech": "^8.0.2",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/camera": "^8.2.3",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
+  },
+  "devDependencies": {
+    "google-tts-api": "^2.0.2",
+    "mkdirp": "^3.0.1",
+    "typescript": "^7.0.2"
+  }
+}

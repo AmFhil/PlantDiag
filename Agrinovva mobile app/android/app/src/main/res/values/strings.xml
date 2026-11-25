@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PlantDiag</string>
+    <string name="title_activity_main">PlantDiag</string>
+    <string name="package_name">com.naijaharvest.app</string>
+    <string name="custom_url_scheme">com.naijaharvest.app</string>
+</resources>

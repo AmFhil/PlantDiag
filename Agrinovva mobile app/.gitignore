@@ -1,0 +1,55 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build / Capacitor
+dist
+build
+www
+android/app/build
+android/.gradle
+android/capacitor-cordova-android-plugins
+android/app/release
+
+# Env
+.env
+.env.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.sw?
+*.sln
+
+# TS
+*.tsbuildinfo
+
+# Large binaries — NEVER push to GitHub (100MB limit + repo bloat)
+*.tflite
+*.bin
+*.zip
+*.mp3
+*.wav
+*.onnx
+models/
+audio/
+tools/
+
+# Misc
+.cache
+temp
+tmp
+coverage
