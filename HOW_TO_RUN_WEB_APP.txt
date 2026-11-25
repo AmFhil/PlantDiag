@@ -1,0 +1,95 @@
+================================================================================
+PLANTDIAG(TM) DUAL-MODEL WEB APPLICATION — USER GUIDE & RUN INSTRUCTIONS
+Built by Fhinovax(TM)
+================================================================================
+
+OVERVIEW
+--------
+This web application provides a browser-based diagnostic environment allowing
+you to run, demonstrate, and compare both AI models in real time:
+
+  1. PlantDiag v2.0 (African Regional Staples Model):
+     - Model: MobileNetV3 (3.25 MB)
+     - Targeted Crops: Cassava (5 conditions) & Rice (4 conditions)
+     - Focus: Regional staple crop pathology with zero class imbalance bias.
+
+  2. PlantDiag v1.7 (PlantVillage 38-Class Baseline Model):
+     - Model: ResNet18 (44.8 MB)
+     - Targeted Crops: 38 conditions across 14 commercial species:
+       Corn (Maize), Tomato, Pepper (Bell), Potato, Orange (Citrus),
+       Apple, Grape, Peach, Strawberry, Squash, Soybean, etc.
+
+
+================================================================================
+HOW TO START THE WEB APP (EASIEST METHOD — 1 CLICK)
+================================================================================
+
+1. Double-click the file named:
+   start_web_app.bat
+
+2. A command window will open, and your default web browser will automatically 
+   launch to:
+   http://localhost:8000
+
+3. That's it! The web app is now fully operational with live neural inference.
+
+
+================================================================================
+HOW TO START VIA COMMAND LINE (POWERSHELL / CMD)
+================================================================================
+
+If you prefer to start manually using a terminal:
+
+1. Open PowerShell or Command Prompt in this folder:
+   c:\Users\user pc\Desktop\Agrinovva_App
+
+2. Run the server using the pre-configured Python environment:
+   & "tools\naija_train_env\Scripts\python.exe" PlantDiag_Web_App\server.py
+
+   (Or in standard CMD):
+   tools\naija_train_env\Scripts\python.exe PlantDiag_Web_App\server.py
+
+3. Open your browser and navigate to:
+   http://localhost:8000
+
+
+================================================================================
+HOW TO USE THE WEB APP DURING YOUR DEMO / PITCH
+================================================================================
+
+1. SWITCHING BETWEEN MODELS:
+   - At the top of the page, click either:
+     * [v2.0 African Staples] to diagnose Cassava or Rice leaves.
+     * [v1.7 38 Crops] to diagnose Corn, Tomato, Pepper, Potato, Citrus, etc.
+
+2. INSTANT SAMPLE LEAF DEMOS (1-CLICK TESTING):
+   - You don't need a live plant nearby! Click any of the sample chips:
+     * 🍂 Cassava Mosaic   (Tests v2.0 - identifies CMD with ~96% confidence)
+     * 🌿 Cassava Healthy  (Tests v2.0 - identifies healthy foliage)
+     * 🌾 Rice Blast       (Tests v2.0 - identifies rice blast lesion)
+     * 🌽 Corn Rust        (Tests v1.7 - identifies maize rust)
+     * 🍅 Tomato Blight    (Tests v1.7 - identifies early blight)
+     * 🫑 Pepper Spot      (Tests v1.7 - identifies bacterial spot)
+
+3. TESTING YOUR OWN PHOTOS:
+   - Drag and drop any leaf image from your computer into the upload zone,
+     or click "browse files" to select a photo.
+   - Click "Diagnose Leaf Now".
+
+4. 5-LANGUAGE VOICE ADVISORY:
+   - Change the Language dropdown to:
+     * English
+     * Hausa (Harshen Hausa)
+     * Yoruba (Ede Yoruba)
+     * Igbo (Asusu Igbo)
+     * Nigerian Pidgin
+   - Click "Hear Advice Aloud" to listen to the diagnosis read out loud via
+     browser text-to-speech.
+
+
+================================================================================
+HOW TO STOP THE SERVER
+================================================================================
+When you are done testing, simply press Ctrl + C in the command window, or close
+the terminal window.
+================================================================================

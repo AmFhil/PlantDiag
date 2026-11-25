@@ -1,0 +1,19 @@
+PlantDiag Web App v2.1 — Build Tracker
+======================================
+
+[x] 1. Copy v1.7 source -> webapp_v2.1
+[x] 2. Pull Android icons & colour palette
+[x] 3. Add home-menu with two big buttons
+[x] 4. Implement manual crop-selection modal
+[x] 5. Persist corrections in IndexedDB
+[x] 6. Wire selected crop into disease model input
+       NOTE: the real TFLite model has a single input [1,224,224,3]
+       (verified) — no crop one-hot input exists. The override is
+       implemented as a server-side routing + ranking bias:
+       /api/diagnose accepts {crop: "..."}; the crop routes to the
+       model that knows it (NaijaStaples-9 for Cassava/Rice,
+       PlantVillage-38 for Corn/Tomato/etc.) and restricts+renormalizes
+       probabilities to that crop's classes before ranking.
+[x] 7. Create start_web_app_2_1.bat
+[ ] 8. Test on clean Windows machine (USB flash drive)
+[x] 9. Document final steps in HOW_TO_RUN_WEB_APP_2_1.txt

@@ -1,0 +1,258 @@
+================================================================================
+AGRINOVVA (NAIJA HARVEST) — COMPREHENSIVE AUDIT FINDINGS
+================================================================================
+Generated: 2026-10-20
+Project: Agrinovva Mobile App (Ionic + Capacitor + Android TFLite + SQLite)
+Target Deployment: Offline-first Android app for Nigerian farmers and extension agents
+
+SUMMARY OF FINDINGS:
+- CRITICAL (Blockers / Native Crashes / Data Loss): 6 items
+- HIGH PRIORITY (Functional Defects / AI Diagnosis Logic Flaws): 5 items
+- MEDIUM PRIORITY (Voice, Audio & Localization Issues): 4 items
+- LOW PRIORITY (UI/UX Inconsistencies & Edge Cases): 5 items
+TOTAL ISSUES IDENTIFIED: 20 items
+
+================================================================================
+SECTION 1: CRITICAL (BLOCKERS / NATIVE CRASHES / DATA LOSS)
+================================================================================
+
+[CRIT-01] Non-Direct ByteBuffer in TFLiteInterpreterPlugin.java (Android JNI Crash)
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/android/app/src/main/java/com/naijaharvest/app/TFLiteInterpreterPlugin.java (line 59)
+- Description: In runInference(), input bytes are wrapped using:
+  ByteBuffer inputBuffer = ByteBuffer.wrap(inputBytes).order(ByteOrder.LITTLE_ENDIAN);
+- Flaw: In Android TensorFlow Lite JNI, Interpreter.run() uses env->GetDirectBufferAddress().
+  Calling this on a non-direct ByteBuffer (heap-backed array) returns NULL or throws
+  java.lang.IllegalArgumentException: The buffer is not a direct buffer.
+- Impact: Inference will crash or throw an unhandled exception immediately upon photo capture on native Android.
+- Fix: Allocate a direct ByteBuffer:
+  ByteBuffer inputBuffer = ByteBuffer.allocateDirect(inputBytes.length).order(ByteOrder.LITTLE_ENDIAN);
+  inputBuffer.put(inputBytes);
+  inputBuffer.rewind();
+
+[CRIT-02] Severe Heap Allocation Spike & Out-Of-Memory (OOM) Risk in Model Loading
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/android/app/src/main/java/com/naijaharvest/app/TFLiteInterpreterPlugin.java (lines 78-85)
+- Description: loadModel() uses readAllBytes(is) via ByteArrayOutputStream to load the
+  44.8 MB .tflite model into a Java heap byte[] before copying to a direct ByteBuffer.
+- Flaw: The ByteArrayOutputStream resizes dynamically (allocating 16MB -> 32MB -> 64MB buffers),
+  spiking JVM heap allocation by over 120-150 MB during model loading.
+- Impact: Target devices in rural Nigeria are low-spec Android phones with 2GB RAM.
+  This triggers an OutOfMemoryError and kills the application on startup or inference.
+- Fix: Use zero-copy memory-mapped I/O via AssetFileDescriptor:
+  AssetFileDescriptor afd = getContext().getAssets().openFd(MODEL_ASSET);
+  FileInputStream fis = new FileInputStream(afd.getFileDescriptor());
+  FileChannel channel = fis.getChannel();
+  MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, afd.getStartOffset(), afd.getDeclaredLength());
+  interpreter = new Interpreter(buffer);
+
+[CRIT-03] SQLite Connection Crash on Activity Resume / Screen Rotation
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/database.js (lines 148-158)
+- Description: initDB() creates a new SQLite connection with plugin.createConnection()
+  whenever the JS memory variable _db is null.
+- Flaw: When an Android activity pauses/resumes, rotates, or reloads the WebView, _db is null
+  in JS, but the native SQLite plugin retains the open connection in memory. Calling
+  plugin.createConnection() throws: "Connection naijaharvest already exists".
+- Impact: The catch block sets _db = null. From that point onwards, all database operations
+  (farmer registration, diagnosis history) permanently fail for the remainder of the session.
+- Fix: Check plugin.isConnection({ database: DB_NAME }). If true, call
+  plugin.retrieveConnection({ database: DB_NAME }). Otherwise call createConnection().
+
+[CRIT-04] Farmer Profile Update Permanently Orpans / Deletes Historical Diagnoses
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/database.js (lines 245-285)
+- Description: saveFarmer() generates a new UUID() on every invocation. When saving a farmer
+  with an existing NIN, the SQL query executes INSERT OR REPLACE INTO farmers.
+- Flaw: Because NIN is UNIQUE, SQLite deletes the old farmer row and inserts a new row with
+  the NEW id. In the schema, the diagnoses table defines:
+  FOREIGN KEY (farmer_id) REFERENCES farmers (id) ON DELETE SET NULL.
+- Impact: Every time an extension agent updates a farmer's details (phone, village, etc.),
+  SQLite's foreign key cascade automatically overwrites farmer_id = NULL on ALL past diagnoses
+  for that farmer, permanently destroying the link between farmers and historical data.
+- Fix: Before inserting, check if a farmer with the given NIN already exists in SQLite.
+  If found, preserve their existing id rather than generating a new UUID.
+
+[CRIT-05] Missing 'noCompress tflite' in AAPT Packaging Options
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/android/app/build.gradle (lines 13-17)
+- Description: aaptOptions in build.gradle does not specify uncompressed asset extensions.
+- Flaw: AAPT automatically compresses the 44.8 MB plant_disease_model.tflite inside the APK.
+- Impact: Compressed assets cannot be memory-mapped via AssetFileDescriptor, forcing slow
+  decompression on startup and preventing zero-copy memory optimization.
+- Fix: Add noCompress 'tflite' to aaptOptions in android/app/build.gradle.
+
+[CRIT-06] Android Native Web Assets Out of Sync with Web Source
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/android/app/src/main/assets/public/ vs src/
+- Description: android/app/src/main/assets/public/index.html is an older build (231 lines)
+  while src/index.html is 286 lines.
+- Flaw: Capacitor sync/copy has not been executed after adding Phase 4 features (Agent Tools,
+  Sync Status cards, Tiv/Idoma coming-soon options).
+- Impact: Testing or compiling the Android project builds an outdated web application bundle.
+- Fix: Run npx cap copy android (or npm run build) to update Android native assets.
+
+================================================================================
+SECTION 2: HIGH PRIORITY (FUNCTIONAL DEFECTS & AI LOGIC FLAWS)
+================================================================================
+
+[HIGH-01] "Green-Pixel" Preprocessing Gate Rejects Real Crop Diseases
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/diagnosis.js (lines 101-114, 234-247)
+- Description: validatePlantImage() requires at least 8% of pixels to satisfy:
+  g > r + 30 && g > b + 20 && g > 60
+- Flaw: Severe crop diseases (Apple Cedar Rust, Orange Citrus Greening, Grape/Apple Black Rot,
+  Potato/Tomato Early & Late Blight, Tomato Yellow Leaf Curl) produce yellow, orange, brown,
+  or black necrotic tissue where red and green are equal or red dominates green.
+- Impact: If a farmer takes a close-up photo of a diseased or necrotic leaf, it has 0%
+  bright-green pixels. The app erroneously rejects valid diseased crops with:
+  "Not a plant image — Please capture a clear photo of a crop leaf or stem."
+- Fix: Expand foliage detection heuristic to include chlorotic yellow and necrotic brown tones:
+  - Green: (g > r + 15 && g > b + 10 && g > 40)
+  - Yellow: (r > 90 && g > 90 && b < 110 && Math.abs(r - g) < 40)
+  - Brown/Rust: (r > 50 && g > 30 && b < 70 && (r - b) > 15)
+
+[HIGH-02] Softmax Temperature (1.5) Inflates Entropy and Causes False Rejections
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/diagnosis.js (lines 51-53, 250-260)
+- Description: SOFTMAX_TEMPERATURE is set to 1.5. Output logits are divided by 1.5 before softmax.
+  Then normalized entropy is compared against ENTROPY_REJECT_THRESHOLD = 0.72.
+- Flaw: Temperature division flattens probability across 38 classes, directly inflating
+  Shannon entropy.
+- Impact: Models with a clear top prediction before scaling exceed the 0.72 entropy threshold
+  and get falsely rejected with: "Image too unclear — Try better lighting".
+- Fix: Set SOFTMAX_TEMPERATURE = 1.0 or calibrate ENTROPY_REJECT_THRESHOLD to 0.82.
+
+[HIGH-03] Diagnoses are Never Associated with Farmers in UI or Database
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/app.js (lines 370-384) & src/index.html (Diagnose tab)
+- Description: saveDiagnosis() never passes a farmerId argument.
+- Flaw: The Diagnose page has no active farmer selector or context.
+- Impact: All records in the diagnoses SQLite table have farmer_id = NULL. The LEFT JOIN
+  farmers f ON f.id = d.farmer_id query in getRecentDiagnoses() always returns NULL for
+  farmer_name, breaking the core workflow of tracking farmer diagnoses over time.
+- Fix: Add an optional "Select Farmer" dropdown on the Diagnose screen, populating it with
+  registered farmers from getFarmers(), and pass the selected farmerId to saveDiagnosis().
+
+[HIGH-04] Corrupted Photo Evidence in Agent Tools (Truncated to 20,000 Chars)
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/app.js (line 622)
+- Description: handleAgentPhoto() stores evidence using:
+  localStorage.setItem('agrinovva_agent_photo', dataUrl.slice(0, 20000));
+- Flaw: A standard JPEG camera dataUrl is 200,000 to 1,000,000 characters long.
+  Slicing it to 20,000 characters chops off 90%+ of the base64 string.
+- Impact: The stored photo string is malformed and permanently corrupt. It cannot be rendered
+  or synced to the cloud.
+- Fix: Remove .slice(0, 20000). Store the full dataUrl (or save to IndexedDB/device filesystem).
+
+[HIGH-05] Localized Treatments Left Blank When Saving Diagnoses
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/app.js (lines 375-378)
+- Description: When saving a diagnosis to SQLite, the code hardcodes:
+  treatment_ha: '', treatment_yo: '', treatment_ig: '', treatment_pcm: ''
+  And writes whichever language is currently displayed into the English 'treatment' column.
+- Flaw: Localized treatments already exist in disease_db.json but are discarded upon saving.
+- Impact: If an agent saves a diagnosis in Hausa, the Hausa text is saved in the English column
+  while treatment_ha remains empty. If viewed later in English, it displays Hausa text.
+- Fix: Save the localized treatment strings from the enriched disease entry, and ensure
+  the English column always stores English.
+
+================================================================================
+SECTION 3: MEDIUM PRIORITY (VOICE, AUDIO & LOCALIZATION FLAWS)
+================================================================================
+
+[MED-01] Yoruba and Igbo Pre-Generated Audio Clips Generated with English Phonemes
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/scripts/generate_audio.js (lines 18-20)
+- Description: In TTS_LANG_MAP:
+  Yoruba: 'en', Igbo: 'en'
+- Flaw: Google TTS API lacked native yo and ig voice models in the script, so it defaulted to 'en'.
+- Impact: All 76 audio files in src/assets/audio/Yoruba/ and src/assets/audio/Igbo/ are
+  English voices attempting to pronounce tonal Nigerian languages, sounding completely
+  unintelligible and robotic to native speakers.
+- Fix: Note this in the audio manifest and configure voice.js to use Android's native TTS
+  engine (Tier 2a) which natively supports Yoruba and Igbo voice packs on Android devices.
+
+[MED-02] Speech Fallback Text Mixes English Prefix with Localized Text
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/app.js (lines 431-434)
+- Description: If audio clips are missing or fail, fallback speech text is created as:
+  const text = isHealthy ? `${crop} looks healthy. No treatment needed.`
+                         : `This is ${crop} ${disease}. ${treat}`;
+- Flaw: "This is " and "looks healthy. No treatment needed" are hardcoded in English.
+- Impact: When speaking in Hausa, Yoruba, or Igbo, the TTS engine speaks English words
+  concatenated with Nigerian language treatment text.
+- Fix: Localize the fallback intro phrases in translations.js or pass only the localized
+  treatment advice to the voice engine.
+
+[MED-03] Missing Translations & i18n Attributes for Navigation & Agent Tools
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/index.html & src/js/translations.js
+- Description:
+  - Bottom nav: "Agent" and "Settings" lack data-i18n attributes.
+  - translations.js lacks entries for nav_agent, nav_settings, Agent Tools headers/checklists,
+    and Settings labels.
+  - Dynamic empty states in app.js (renderDiagnosisList) overwrite translated text with
+    hardcoded English strings.
+- Impact: Toggling the language selector leaves significant portions of the app untranslated.
+- Fix: Add missing translation keys across all 5 languages and dynamically pull localized
+  empty state text.
+
+[MED-04] Global UI Language Selector Overwrites Farmer Registration Language
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/app.js (lines 107-115, 468)
+- Description: syncLang() syncs both globalLangSelect and farmerLang to the same value.
+- Flaw: The extension agent's UI language preference is coupled to the farmer's profile language.
+- Impact: If an agent prefers English UI but registers a Hausa farmer, switching or resetting
+  forms forces the farmer's preferred language to English.
+- Fix: Decouple farmerLang from globalLangSelect.
+
+================================================================================
+SECTION 4: LOW PRIORITY (UI/UX INCONSISTENCIES & EDGE CASES)
+================================================================================
+
+[LOW-01] False "Pending Sync" Count Increments on Form Validation Failure
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/app.js (lines 551-560)
+- Description: An independent submit listener on farmerForm increments agrinovva_pending
+  in localStorage without checking whether form validation succeeded.
+- Flaw: Submitting an empty form shows an alert ("Please enter farmer name"), but still
+  increments the "Pending Sync" badge counter.
+- Fix: Remove the separate submit listener and only increment the pending count inside
+  the main submit handler after saveFarmer() successfully completes.
+
+[LOW-02] Unrestored Offline Toggle State on App Startup
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/app.js (lines 80-85, 149-159)
+- Description: loadSettings() loads offline_mode from SQLite, but app.js never reads
+  getOfflineMode() to initialize the checkbox state on DOMContentLoaded.
+- Flaw: The UI toggle and header badge always reset to default values on app reload.
+- Fix: In DOMContentLoaded, read getOfflineMode() and update offlineToggle.checked
+  and offlineBadge.textContent accordingly.
+
+[LOW-03] Hanging Promise on Cancel in Web Camera File Picker
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/js/camera.js (lines 24-38)
+- Description: On web preview, capturePhoto() creates an <input type="file"> and waits for
+  onchange.
+- Flaw: If the user cancels the file dialog without selecting an image, onchange never fires.
+- Impact: The Promise remains pending indefinitely.
+- Fix: Attach a cancel event listener to the file input to reject('cancelled') or resolve(null).
+
+[LOW-04] Inconsistent Navigation Button Attributes for Settings Tab
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/src/index.html (lines 278-281)
+- Description: Settings button uses data-page="settings" and <span>Settings</span> instead of
+  data-target="settings" and <span class="nav-label">Settings</span>.
+- Impact: Minor CSS/JS attribute inconsistency compared to the other navigation items.
+- Fix: Normalize to data-target="settings" and add class="nav-label".
+
+[LOW-05] PlantVillage Model Lacks Nigeria's Primary Staple Crops
+--------------------------------------------------------------------------------
+- Location: Agrinovva mobile app/models/classes.json
+- Description: The model contains temperate crops (Apple, Blueberry, Cherry, Grape, Peach,
+  Raspberry, Strawberry) that represent ~40% of the model classes, but completely lacks
+  Nigeria's primary staple crops (Cassava, Yam, Sorghum, Cowpea, Rice, Cocoa).
+- Impact: Real-world usability in Nigerian rural agriculture is limited to Maize, Tomato,
+  Pepper, and Potato until an African crop model (e.g. Makerere/IITA Cassava dataset) is integrated.
+- Fix: Document as a Phase 5/6 model enhancement to retrain or fine-tune with IITA Cassava/Yam datasets.

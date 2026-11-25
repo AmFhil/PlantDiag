@@ -1,0 +1,129 @@
+================================================================================
+PLANTDIAG(TM) WEB APPLICATION v2.1 — USER GUIDE & RUN INSTRUCTIONS
+Built by Fhinovax(TM)
+================================================================================
+
+OVERVIEW
+--------
+Version 2.1 is the web build that mirrors the Android app UI (same icons,
+layout and green/gold colours) and adds three new capabilities:
+
+  1. TWO-BUTTON START SCREEN (home.html):
+     - [Take Picture]  — opens the app directly in camera-capture mode
+       (browser file picker / phone camera).
+     - [Live Demo]     — opens the full app UI in a NEW browser tab
+       (live.html) so you can demo side-by-side.
+
+  2. MANUAL CROP OVERRIDE:
+     After every AI prediction a modal asks "Is the prediction correct?".
+     If the AI guessed the wrong crop, pick the right one from the list and
+     click Save & Continue — the disease is re-analysed using only that
+     crop's classes.
+
+  3. LOCAL CORRECTION MEMORY (IndexedDB):
+     Every correction is stored on-device, keyed by a SHA-256 hash of the
+     photo. If the SAME photo is ever analysed again, the saved crop is
+     applied automatically (no modal) and the result is tagged
+     "Correction applied from a previous visit".
+
+  All data stays on this machine. No internet required, no accounts.
+
+
+================================================================================
+HOW TO START THE WEB APP (EASIEST METHOD — 1 CLICK)
+================================================================================
+
+1. Double-click the file named:
+   start_web_app_2_1.bat
+
+   (The original start_web_app.bat still launches the v1.7/v2.0 dual-model
+   demo — untouched. Use start_web_app_2_1.bat for the v2.1 app.)
+
+2. A command window will open, and your default web browser will
+   automatically launch to:
+   http://localhost:8000/home.html
+
+3. That's it! The start screen shows the two big buttons.
+
+
+================================================================================
+HOW TO START VIA COMMAND LINE (POWERSHELL / CMD)
+================================================================================
+
+1. Open PowerShell or Command Prompt in this folder:
+   c:\Users\user pc\Desktop\Agrinovva_App
+
+2. Run the v2.1 server using the pre-configured Python environment:
+   & "tools\naija_train_env\Scripts\python.exe" webapp_v2.1\server.py
+
+   (Or in standard CMD):
+   tools\naija_train_env\Scripts\python.exe webapp_v2.1\server.py
+
+3. Open your browser and navigate to:
+   http://localhost:8000/home.html
+
+
+================================================================================
+HOW TO USE THE START SCREEN
+================================================================================
+
+- TAKE PICTURE:
+  Navigates to app.html?camera=1 — the Diagnose tab opens and the
+  camera / file picker is triggered automatically. Snap or choose a leaf
+  photo and the analysis starts immediately.
+
+- LIVE DEMO:
+  Opens live.html in a NEW TAB — the exact same app UI (Home, Diagnose,
+  History, Farmers, Agent, Settings, 5-language support, voice advice).
+  Ideal for pitch demos: start screen stays open in the first tab.
+
+
+================================================================================
+HOW TO OVERRIDE A WRONG CROP PREDICTION
+================================================================================
+
+1. Capture a leaf (Take Picture) and let the AI predict.
+
+2. When the result appears, the modal "Is the prediction correct?" opens
+   showing the AI's guess.
+
+3. Wrong crop? Open the dropdown, choose the correct crop, then click
+   [Save & Continue].
+   - The disease model re-runs with its ranking restricted to the crops
+     you selected.
+   - The result card shows: "Crop manually set to <crop>".
+   - The correction is saved to IndexedDB for that exact photo.
+
+4. Right crop? Click [Keep AI guess] — nothing is stored and the result
+   stands.
+
+5. Re-select the SAME photo later → the saved correction is applied
+   automatically and tagged "Correction applied from a previous visit".
+
+
+================================================================================
+IMPORTANT NOTES
+================================================================================
+
+- The Python server must be running for REAL AI predictions
+  (start_web_app_2_1.bat does this for you). If the server is not
+  running, the page still loads but falls back to the built-in preview
+  estimates.
+
+- All data is stored LOCALLY on this machine:
+  * Corrections  -> browser IndexedDB (AgrinovvaDB)
+  * Farmers/History -> browser local storage
+  No internet connection is required or used.
+
+- PORTABILITY: the whole Agrinovva_App folder (webapp_v2.1, tools,
+  start_web_app_2_1.bat) can be copied to a USB flash drive and run on
+  any Windows PC with no installation — just double-click
+  start_web_app_2_1.bat.
+
+
+================================================================================
+HOW TO STOP THE SERVER
+================================================================================
+When you are done, press Ctrl + C in the command window, or close the
+terminal window.
+================================================================================

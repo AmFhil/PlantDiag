@@ -1,0 +1,75 @@
+=== Steps to Bundle the Android APK (Agrinovva) ===
+
+1. **Verify Android SDK & Java**
+   - Ensure Android SDK is installed and `ANDROID_HOME` is set.
+   - Confirm Java JDK 11+ is on PATH.
+
+2. **Activate the Python environment** (used for model utilities)
+   set PYTHON_EXE=tools\naija_train_env\Scripts\python.exe
+   if not exist "%PYTHON_EXE%" (
+       echo [ERROR] Python environment not found at: %PYTHON_EXE%
+       exit /b 1
+   )
+   *Path:* c:\Users\user pc\Desktop\Agrinovva_App\tools\naija_train_env\Scripts\python.exe
+
+3. **Build the web assets** (Capacitor front‑end)
+   cd "Agrinovva mobile app"
+   npm install               # install node dependencies (once)
+   npm run build             # generates `dist/` folder
+   *Output folder:* c:\Users\user pc\Desktop\Agrinovva_App\Agrinovva mobile app\dist
+
+4. **Copy web assets into the Android project**
+   npx cap copy android
+   *Resulting copy location:* c:\Users\user pc\Desktop\Agrinovva_App\Agrinovva mobile app\android\app\src\main\assets\public
+
+5. **Sync Capacitor plugins & config**
+   npx cap sync android
+   Updates Gradle files and adds any native plugins.
+
+6. **Open the Android project in Android Studio**
+   - In Android Studio choose **File → Open** and select:
+     c:\Users\user pc\Desktop\Agrinovva_App\Agrinovva mobile app\android
+
+7. **Configure signing config for a release build**
+   Edit `android/app/build.gradle` and add:
+   android {
+       signingConfigs {
+           release {
+               storeFile file('keystore/agrinovva_keystore.jks')
+               storePassword "<keystore‑password>"
+               keyAlias "agrinovva_key"
+               keyPassword "<key‑password>"
+           }
+       }
+       buildTypes {
+           release {
+               signingConfig signingConfigs.release
+               minifyEnabled false
+           }
+       }
+   }
+   *Keystore path:* c:\Users\user pc\Desktop\Agrinovva_App\Agrinovva mobile app\android\app\keystore\agrinovva_keystore.jks
+
+8. **Generate the Release APK**
+   - In Android Studio: **Build → Generate Signed Bundle / APK…**
+   - Choose **APK → Release**, select the signing config above, and finish.
+   - The generated APK is placed at:
+     c:\Users\user pc\Desktop\Agrinovva_App\Agrinovva mobile app\android\app\build\outputs\apk\release\app-release.apk
+
+9. **Verify the APK**
+   - Transfer `app-release.apk` to a device or emulator.
+   - Install via `adb install -r <path>` or by opening the file on the device.
+
+10. **Optional – Version‑specific copy**
+   copy "...\app-release.apk" "...\Agrinovva_v2.1.apk"
+   *Resulting path:* c:\Users\user pc\Desktop\Agrinovva_App\Agrinovva_v2.1.apk
+
+--- Summary of Important Paths ---
+- Python env: tools\naija_train_env\Scripts\python.exe
+- Web build output: Agrinovva mobile app\dist
+- Capacitor copy target: Agrinovva mobile app\android\app\src\main\assets\public
+- Android project root: Agrinovva mobile app\android
+- Release keystore: Agrinovva mobile app\android\app\keystore\agrinovva_keystore.jks
+- Final APK: Agrinovva mobile app\android\app\build\outputs\apk\release\app-release.apk
+
+Save this file as APK_BUNDLE_STEPS.txt in the project root.

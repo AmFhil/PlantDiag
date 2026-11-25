@@ -1,0 +1,201 @@
+=== Web App v2.1 – Build & Deployment Instruction ===
+
+--- Overview ---------------------------------------
+1. **Goal**: Produce a web version that looks *exactly* like the existing Android app (same icons, layout, colours).  
+2. **Versioning**: Keep the original v1.7 and v2.0 untouched.  Create a new folder `webapp_v2.1` based on the v1.7 source.
+3. **New features**:
+   - Two large start‑menu buttons: **"Take Picture"** (opens camera / file picker) and **"Live Demo"** (opens the live app in a new tab).
+   - After an AI prediction, the farmer may *override* the crop type if the guess is wrong.
+   - All corrections are persisted locally (IndexedDB) and used to bias future predictions.
+4. **Portability**: The whole folder can be copied to a flash drive and run on any Windows machine (no install required) via the provided `start_web_app.bat`.
+
+--- Prerequisites -----------------------------------
+- Python 3.13 (installed at `C:\Users\user pc\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Python 3.13`).  
+- Node.js v20 (for the Vite build).  
+- The Android UI assets (icons, SVGs, PNGs) located in `Agrinovva mobile app/android/app/src/main/res/*`.
+- Existing web app source for v1.7 at `Agrinovva mobile app/src/`.
+
+--- 1. Create the v2.1 folder ------------------------
+```
+cd "C:\Users\user pc\Desktop\Agrinovva_App"
+mkdir webapp_v2.1
+xcopy "Agrinovva mobile app\src" "webapp_v2.1" /E /I /H
+```
+The copy retains the original `index.html`, `js/`, `css/` etc.
+
+--- 2. Mirror the Android UI --------------------------
+1. **Icons** – Copy every icon from the Android `res/mipmap-*` folders into `webapp_v2.1/assets/icons/`.
+   ```
+   mkdir webapp_v2.1/assets/icons
+   xcopy "Agrinovva mobile app\android\app\src\main\res\mipmap-*" "webapp_v2.1\assets\icons" /E /I
+   ```
+2. **Colour palette & fonts** – In `webapp_v2.1/css/index.css` replace the colour variables with those from `styles.xml` (Android). Example:
+   ```css
+   :root {
+       --primary:#0A6CFF;   /* from Android primary color */
+       --secondary:#FFC107; /* accent */
+       --bg:#F5F5F5;        /* background */
+   }
+   ```
+   Use the Google Font referenced in the Android `strings.xml` (e.g., `Inter` or `Roboto`).
+3. **Layout** – The Android `activity_main.xml` defines the main screen. Replicate its hierarchy using HTML/CSS: a centered container with a header bar, a large image view, and a bottom navigation bar containing the 5 language buttons. The exact class names can be copied from `src/js/translations.js` which already holds the text strings.
+
+--- 3. Add the two big start‑menu buttons ----------
+Edit `webapp_v2.1/index.html` (or create a new `home.html`). Insert the following block *above* the existing app root:
+```html
+<div class="home-menu">
+  <button id="btn-photo" class="big-btn">
+    <img src="assets/icons/camera.png" alt="Camera" class="btn-icon"/>
+    Take Picture
+  </button>
+  <button id="btn-live" class="big-btn">
+    <img src="assets/icons/play.png" alt="Live" class="btn-icon"/>
+    Live Demo
+  </button>
+</div>
+```
+Add accompanying CSS in `css/index.css`:
+```css
+.home-menu { display:flex; flex-direction:column; align-items:center; gap:2rem; margin-top:3rem; }
+.big-btn { width:90%; max-width:400px; padding:1.5rem; font-size:1.4rem; background:var(--primary); color:#fff; border:none; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; gap:1rem; cursor:pointer; }
+.big-btn:hover { background:#0056d2; }
+.btn-icon { width:24px; height:24px; }
+```
+**Behaviour** (add to `js/app.js`):
+```js
+document.getElementById('btn-photo').addEventListener('click',()=>{ window.location.href='app.html'; });
+document.getElementById('btn-live').addEventListener('click',()=>{ window.open('live.html','_blank'); });
+```
+Create `live.html` that loads the exact same UI as `app.html` – it is just a second tab.
+
+--- 4. Manual crop‑selection overlay ----------------
+When the AI returns a prediction, show a modal:
+```html
+<div id="crop-select-modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Is the prediction correct?</h2>
+    <p>AI guessed: <span id="ai-guess"></span></p>
+    <label for="crop-choice">If not, select the correct crop:</label>
+    <select id="crop-choice">
+      <!-- options will be filled from classes.json -->
+    </select>
+    <button id="crop-save">Save & Continue</button>
+  </div>
+</div>
+```
+JS flow (append to `js/app.js` after disease prediction):
+```js
+function showCropSelector(aiCrop){
+  document.getElementById('ai-guess').textContent = aiCrop;
+  const select = document.getElementById('crop-choice');
+  select.innerHTML = '';
+  classes.forEach(c=>{ const opt=document.createElement('option'); opt.value=c; opt.textContent=c; select.appendChild(opt); });
+  document.getElementById('crop-select-modal').classList.remove('hidden');
+}
+document.getElementById('crop-save').addEventListener('click',()=>{
+  const chosen = document.getElementById('crop-choice').value;
+  // store correction
+  storeCorrection(chosen);
+  // re‑run disease inference using chosen crop as context (see step 5)
+  runDiseaseModel(chosen);
+  document.getElementById('crop-select-modal').classList.add('hidden');
+});
+```
+--- 5. Persist corrections & improve future predictions ----------
+Use **IndexedDB** (via tiny wrapper `idb`) to keep a map `{imageHash → {crop, disease}}`.
+```js
+import {openDB} from 'https://unpkg.com/idb?module';
+const dbPromise = openDB('AgrinovvaDB',1,{
+  upgrade(db){ db.createObjectStore('corrections'); }
+});
+async function storeCorrection(crop){
+  const imgHash = await hashImage(currentImageData); // e.g., SHA‑256 of raw bytes
+  const db = await dbPromise;
+  await db.put('corrections', {crop, timestamp:Date.now()}, imgHash);
+}
+async function lookupCorrection(){
+  const imgHash = await hashImage(currentImageData);
+  const db = await dbPromise;
+  return db.get('corrections', imgHash);
+}
+```
+When a new picture is taken, first call `lookupCorrection()`. If a saved entry exists, skip the AI model and directly use the stored crop/disease (or present it as a suggestion with higher confidence).
+
+--- 6. Hook the stored crop into the disease model ----------
+The disease model (`plant_disease_model.tflite`) expects the *crop* as part of the preprocessing pipeline (the Android app concatenates a one‑hot vector). Mirror that in `js/diagnosis.js`:
+```js
+function buildInputTensor(imageTensor, cropName){
+  const cropIdx = classes.indexOf(cropName);
+  const cropOneHot = new Float32Array(classes.length).fill(0);
+  cropOneHot[cropIdx] = 1;
+  // concatenate imageTensor (shape [1,3,224,224]) with cropOneHot (shape [1,38])
+  // … implementation depends on your tflite‑js wrapper …
+  return concatenatedTensor;
+}
+```
+When the user manually selects a crop, pass that name to `buildInputTensor` before invoking inference.
+
+--- 7. Update the start script -----------------------------------
+Create a new batch file `start_web_app_2_1.bat` (copy of the original) that points to the new folder:
+```bat
+@echo off
+title PlantDiag Web App – Version 2.1 (v1.7‑based)
+color 0A
+
+set PYTHON_EXE=tools\naija_train_env\Scripts\python.exe
+if not exist "%PYTHON_EXE%" (
+    echo [ERROR] Python environment not found at: %PYTHON_EXE%
+    pause
+    exit /b 1
+)
+
+echo [1/2] Launching browser to http://localhost:8000/home.html ...
+start http://localhost:8000/home.html
+
+echo [2/2] Starting Python TFLite server...
+"%PYTHON_EXE%" webapp_v2.1\server.py
+pause
+```
+Now the flash‑drive can be plugged in, double‑click `start_web_app_2_1.bat`, and the upgraded UI appears.
+
+--- 8. Build & Test ------------------------------------------------
+1. **Install dependencies** (once on the host machine):
+   ```
+   cd webapp_v2.1
+   npm install tflite-node js-cookie idb
+   ```
+2. **Run the dev server** to ensure everything works:
+   ```
+   npm run dev   # or "node server.js" if you use a simple Express wrapper
+   ```
+3. Open `http://localhost:8000/home.html` – you should see the two big buttons, the Android‑look UI, and the manual‑crop modal after a prediction.
+4. Test the override workflow:
+   - Capture a leaf.
+   - Let the AI guess.
+   - Choose a different crop, click **Save**.
+   - Reload the same image – the stored correction should be applied automatically.
+5. Verify that the entire `Agrinovva_App` folder (including `webapp_v2.1`, `tools`, `start_web_app_2_1.bat`) can be copied to a USB stick and run on another Windows PC without re‑installing anything.
+
+--- 9. Tracker file (for you) -------------------------------------
+Create `webapp_v2.1_tracker.txt` inside the new folder. Add a line for each milestone:
+```
+[ ] 1. Copy v1.7 source → webapp_v2.1
+[ ] 2. Pull Android icons & colour palette
+[ ] 3. Add home‑menu with two big buttons
+[ ] 4. Implement manual crop‑selection modal
+[ ] 5. Persist corrections in IndexedDB
+[ ] 6. Wire selected crop into disease model input
+[ ] 7. Create start_web_app_2_1.bat
+[ ] 8. Test on clean Windows machine (USB flash drive)
+[ ] 9. Document final steps in HOW_TO_RUN_WEB_APP_2_1.txt
+```
+Update the check‑boxes as you progress.
+
+--- 10. Final documentation -----------------------------------
+Copy the existing `HOW_TO_RUN_WEB_APP.txt` to `HOW_TO_RUN_WEB_APP_2_1.txt` and adjust the instructions:
+- Mention the new batch file name.
+- Explain the two‑button start screen.
+- Describe the “override crop” workflow.
+- Note that all data is stored locally (no internet required).
+
+=== End of Instruction File ===

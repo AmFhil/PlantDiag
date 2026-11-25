@@ -1,0 +1,134 @@
+================================================================================
+AGRINOVVA — TRAINING ENVIRONMENT INSTALL LOG & CLEANUP GUIDE
+================================================================================
+Document : training-env-cleanup.txt
+Purpose  : Records EVERYTHING installed for NaijaStaples-30 model training
+           so you can remove it all cleanly when training is done.
+Date     : 2026-10-20
+================================================================================
+
+WHAT WAS INSTALLED AND WHERE
+================================================================================
+
+1. PYTHON 3.11 (installed alongside your existing Python 3.14.5)
+   ─────────────────────────────────────────────────────────────────────
+   Install command   : winget install --id Python.Python.3.11
+   Expected location : C:\Users\user pc\AppData\Local\Programs\Python\Python311\
+   Python executable : C:\Users\user pc\AppData\Local\Programs\Python\Python311\python.exe
+   pip executable    : C:\Users\user pc\AppData\Local\Programs\Python\Python311\Scripts\pip.exe
+
+   TO REMOVE PYTHON 3.11:
+     Method A (Recommended):
+       winget uninstall --id Python.Python.3.11
+
+     Method B (Manual):
+       Control Panel → Programs → Python 3.11 → Uninstall
+       Then delete folder: C:\Users\user pc\AppData\Local\Programs\Python\Python311\
+
+   NOTE: This does NOT touch your Python 3.14.5 at:
+         C:\Users\user pc\AppData\Local\Programs\Python\Python314\
+         Your existing Python 3.14.5 and all its packages are untouched.
+
+2. VIRTUAL ENVIRONMENT (naija_train_env)
+   ─────────────────────────────────────────────────────────────────────
+   Location          : C:\Users\user pc\Desktop\Agrinovva_App\tools\naija_train_env\
+   Created with      : py -3.11 -m venv naija_train_env
+   Activation        : tools\naija_train_env\Scripts\activate
+
+   TO REMOVE VIRTUAL ENVIRONMENT:
+     Just delete the folder:
+       rmdir /s /q "C:\Users\user pc\Desktop\Agrinovva_App\tools\naija_train_env"
+     (This removes ALL pip packages below — none are installed globally)
+
+3. PIP PACKAGES INSTALLED INTO VIRTUAL ENVIRONMENT
+   ─────────────────────────────────────────────────────────────────────
+   ALL packages below are ONLY inside naija_train_env\, NOT global.
+   Deleting the venv folder removes all of them at once.
+
+   Package                  Version       Purpose
+   ─────────────────────────────────────────────────────────────────────
+   tensorflow               2.15.0        Model training + TFLite conversion
+   albumentations           1.3.1         Field-condition image augmentation
+   kaggle                   latest        Dataset download via Kaggle API
+   matplotlib               latest        Confusion matrix plots
+   scikit-learn             latest        Already in global, also in venv
+   numpy                    latest        Array operations
+   pillow                   latest        Image loading
+   huggingface-hub          latest        Download cassava dataset (no login)
+   datasets                 latest        HuggingFace dataset loader
+   kagglehub                latest        Kaggle dataset download (alt method)
+
+4. KAGGLE API CREDENTIALS FILE
+   ─────────────────────────────────────────────────────────────────────
+   Location : C:\Users\user pc\.kaggle\kaggle.json
+   Contents : {"username":"YOUR_KAGGLE_USERNAME","key":"YOUR_API_KEY"}
+
+   TO REMOVE:
+     del "C:\Users\user pc\.kaggle\kaggle.json"
+     rmdir "C:\Users\user pc\.kaggle"   (only if folder is now empty)
+
+5. DOWNLOADED DATASETS (raw, multi-GB files)
+   ─────────────────────────────────────────────────────────────────────
+   Location : C:\Users\user pc\Desktop\Agrinovva_App\tools\datasets\
+   Contents : ZIP archives and extracted image folders per crop
+   Size     : ~8–12 GB extracted
+
+   TO REMOVE (after training is complete and .tflite is saved):
+     rmdir /s /q "C:\Users\user pc\Desktop\Agrinovva_App\tools\datasets"
+
+6. TRAINING OUTPUT FILES
+   ─────────────────────────────────────────────────────────────────────
+   Location : C:\Users\user pc\Desktop\Agrinovva_App\tools\output\
+   Contents :
+     - naija_saved_model\           (Keras SavedModel, ~60MB — can delete after export)
+     - naijastables_mobilenetv3.h5  (weights backup, ~60MB — can delete after export)
+     - naijastables_mobilenetv3_float32.tflite  (~15MB — for desktop testing only)
+     - naijastables_mobilenetv3_int8.tflite     (~5-7MB — THIS IS THE DEPLOY FILE, KEEP!)
+     - confusion_matrix.png         (keep for documentation)
+     - training_history.json        (keep for documentation)
+     - warmup_log.csv               (can delete)
+     - finetune_log.csv             (can delete)
+
+   AFTER TRAINING — what to keep vs delete:
+     KEEP: naijastables_mobilenetv3_int8.tflite  ← copy to Android assets
+     KEEP: confusion_matrix.png                  ← proof of accuracy
+     KEEP: training_history.json                 ← accuracy/loss curves
+     DELETE everything else in tools\output\
+
+================================================================================
+FULL CLEANUP SEQUENCE (run AFTER you have the .tflite and are done training)
+================================================================================
+
+Step 1 — Copy the model to the app FIRST:
+  Copy: tools\output\naijastables_mobilenetv3_int8.tflite
+  To  : Agrinovva mobile app\android\app\src\main\assets\model\
+
+Step 2 — Remove datasets (largest files, ~8-12 GB):
+  rmdir /s /q "C:\Users\user pc\Desktop\Agrinovva_App\tools\datasets"
+
+Step 3 — Remove training output (except the .tflite you already copied):
+  del "C:\Users\user pc\Desktop\Agrinovva_App\tools\output\naija_saved_model" /s /q
+  del "C:\Users\user pc\Desktop\Agrinovva_App\tools\output\*.h5"
+  del "C:\Users\user pc\Desktop\Agrinovva_App\tools\output\*.csv"
+  del "C:\Users\user pc\Desktop\Agrinovva_App\tools\output\*float32.tflite"
+
+Step 4 — Remove virtual environment:
+  rmdir /s /q "C:\Users\user pc\Desktop\Agrinovva_App\tools\naija_train_env"
+
+Step 5 — Remove Kaggle credentials (optional):
+  del "C:\Users\user pc\.kaggle\kaggle.json"
+
+Step 6 — Remove Python 3.11 (optional, only if you don't need it for other things):
+  winget uninstall --id Python.Python.3.11
+
+Step 7 — Verify your Python 3.14 still works:
+  python --version   (should show 3.14.x)
+
+================================================================================
+YOUR EXISTING PYTHON 3.14 IS SAFE — NEVER TOUCHED
+================================================================================
+Path   : C:\Users\user pc\AppData\Local\Programs\Python\Python314\python.exe
+Version: 3.14.5 (64bit, WindowsPE)
+Status : UNTOUCHED. All training work is in a separate venv under Python 3.11.
+
+================================================================================
